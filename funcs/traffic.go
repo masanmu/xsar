@@ -20,17 +20,18 @@ func TrafficMetrics() interface{} {
 }
 
 func trafficMetrics() module.TrafficMetric {
+	var now module.TrafficMetric
 	content := Open(config.TrafficFile)
 	values := strings.Split(content, "\n")
 	for _, value := range values {
 		if strings.HasPrefix(value, "eth") || strings.HasPrefix(value, "em") || strings.HasPrefix(value, "en") {
-			trafficInit(strings.Split(value, ":")[1])
+			trafficInit(strings.Split(value, ":")[1], now)
 		}
 	}
 	return traffic
 }
 
-func trafficInit(value string) {
+func trafficInit(value string, now module.TrafficMetric) {
 	compile, err := regexp.Compile(" +")
 	if err != nil {
 		log.Fatalf("Failed to initialize regular expression")
@@ -48,12 +49,12 @@ func trafficInit(value string) {
 	pkgErrIn, _ := strconv.ParseFloat(ifNet[3], 64)
 	pkgErrOut, _ := strconv.ParseFloat(ifNet[11], 64)
 
-	traffic.ByteIn += byteIn
-	traffic.ByteOut += byteOut
-	traffic.PktIn += pkgIn
-	traffic.PktOut += pkgOut
-	traffic.PktDrp += pkgDrpIn + pkgDrpOut
-	traffic.PktErr += pkgErrIn + pkgErrOut
+	now.ByteIn += byteIn
+	now.ByteOut += byteOut
+	now.PktIn += pkgIn
+	now.PktOut += pkgOut
+	now.PktDrp += pkgDrpIn + pkgDrpOut
+	now.PktErr += pkgErrIn + pkgErrOut
 }
 
 func trafficAvg() module.TrafficMetric {
@@ -63,6 +64,5 @@ func trafficAvg() module.TrafficMetric {
 	traffic.PktOut = Delta(trafficNow.PktOut, trafficPre.PktOut)
 	traffic.PktErr = Delta(trafficNow.PktErr, trafficPre.PktErr)
 	traffic.PktDrp = Delta(trafficNow.PktDrp, trafficPre.PktDrp)
-
 	return traffic
 }

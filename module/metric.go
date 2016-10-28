@@ -57,7 +57,6 @@ type LoadMetric struct {
 	Load1min   float64 `json:"load1min"`
 	Load5min   float64 `json:"load5min"`
 	Load15min  float64 `json:"load15min"`
-	Task       string  `json:"task(running/sleep)"`
 	Lastaskpid float64 `json:"lastaskpid"`
 }
 

@@ -5,12 +5,16 @@ import (
 	"github.com/xsar/module"
 	"strconv"
 	"strings"
+	"time"
 )
 
-var udp module.UdpMetric
+var udpNow, udpPre, udp module.UdpMetric
 
 func UdpMetrics() interface{} {
-	return udpMetrics()
+	udpPre = udpMetrics()
+	time.Sleep(time.Second)
+	udpNow = udpMetrics()
+	return udpAvg()
 }
 
 func udpMetrics() module.UdpMetric {
@@ -21,5 +25,13 @@ func udpMetrics() module.UdpMetric {
 	udp.InErrors, _ = strconv.ParseFloat(value[3], 64)
 	udp.OutDatagrams, _ = strconv.ParseFloat(value[4], 64)
 
+	return udp
+}
+
+func udpAvg() module.UdpMetric {
+	udp.InDatagrams = Delta(udpNow.InDatagrams, udpPre.InDatagrams)
+	udp.InErrors = Delta(udpNow.InErrors, udpPre.InErrors)
+	udp.NoPorts = Delta(udpNow.NoPorts, udpPre.NoPorts)
+	udp.OutDatagrams = Delta(udpNow.OutDatagrams, udpPre.OutDatagrams)
 	return udp
 }
