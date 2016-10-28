@@ -44,23 +44,11 @@ func main() {
 
 func Help() string {
 	helpText := `
-Usage: tsar [options]
+Usage: xsar [options]
 Options:
-    -check         display last record for alert
-    -check     display last record for alert.example:tsar --check / tsar --check --cpu --io
-    -watch     display last records in N mimutes. example:tsar --watch 30 / tsar --watch 30 --cpu --io
     -cron      run in cron mode, output data to file
     -interval  specify intervals numbers, in minutes if with --live, it is in seconds
     -list      list enabled modules
-    -live      running print live mode, which module will print
-    -file      specify a filepath as input
-    -ndays     show the value for the past days (default: 1)
-    -date      show the value for the specify day(n or YYYYMMDD)
-    -merge     merge multiply item to one
-    -detail    do not conver data to K/M/G
-    -spec/-s      show spec field data, tsar --cpu -s sys,util
-    -item      show spec item data, tsar --io -I sda
-    -help      help
 `
 	helpText += module.Help()
 	return strings.TrimSpace(helpText)

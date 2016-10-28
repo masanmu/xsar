@@ -39,14 +39,11 @@ func Help() string {
 Modules Enabled:
     --cpu               CPU share (user, system, interrupt, nice, & idle)
     --mem               Physical memory share (active, inactive, cached, free, wired)
-    --swap              swap usage
     --tcp               TCP traffic     (v4)
     --udp               UDP traffic     (v4)
     --traffic           Net traffic statistics
     --io                Linux I/O performance
-    --pcsw              Process (task) creation and context switch
-    --partition         Disk and partition usage
-    --tcpx              TCP connection data
+    --df         Disk and partition usage
     --load              System Run Queue and load average
 `
 	return helpText
