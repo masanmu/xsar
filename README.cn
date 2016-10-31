@@ -1,3 +1,50 @@
 Xsar介绍
 -------------
 Xsar是一个用golang编写的收集服务器指标的工具
+
+简单使用
+-------------
+sanmu@sanmu-ThinkPad-X250:~/workspace/src/github.com/xsar$ go run main.go -h
+Usage: xsar [options]
+Options:
+    -c      run in cron mode, output data to file
+    -w     display last records in N mimutes.
+
+Modules Enabled:
+    --cpu               CPU share (user, system, interrupt, nice, & idle)
+    --mem               Physical memory share (active, inactive, cached, free, wired)
+    --tcp               TCP traffic     (v4)
+    --udp               UDP traffic     (v4)
+    --traffic           Net traffic statistics
+    --io                Linux I/O performance
+    --df         	Disk and partition usage
+    --load              System Run Queue and load average
+
+Example:
+查看系统负载
+sanmu@sanmu-ThinkPad-X250:~/workspace/src/github.com/xsar$ go run main.go -load
+Time                       lastaskpid   load15min    load1min    load5min
+2016-10-31 16:00:01             14637        1.53        1.73        1.75
+2016-10-31 16:01:01             14898        1.50        1.29        1.63
+2016-10-31 16:02:01             15118        1.52        1.53        1.66
+2016-10-31 16:03:01             15345        1.54        1.80        1.69
+2016-10-31 16:04:01             15706        1.51        1.31        1.57
+2016-10-31 16:05:01             16290        1.50        1.31        1.55
+2016-10-31 16:06:01             16763        1.48        1.31        1.47
+2016-10-31 16:07:01             17001        1.53        1.89        1.61
+2016-10-31 16:08:01             17307        1.53        1.60        1.60
+2016-10-31 16:09:01             17598        1.53        1.56        1.58
+2016-10-31 16:09:34             17839        1.55        1.85        1.64
+2016-10-31 16:10:01             17972        1.53        1.52        1.58
+2016-10-31 16:11:02             18443        1.57        2.16        1.70
+2016-10-31 16:12:01             18699        1.61        2.08        1.78
+2016-10-31 16:13:01             19026        1.64        2.27        1.86
+2016-10-31 16:14:01             19462        1.69        2.41        1.98
+
+查看系统5min之内的负载
+sanmu@sanmu-ThinkPad-X250:~/workspace/src/github.com/xsar$ go run main.go -load -w 5
+Time                       lastaskpid   load15min    load1min    load5min
+2016-10-31 16:13:01             19026        1.64        2.27        1.86
+2016-10-31 16:14:01             19462        1.69        2.41        1.98
+2016-10-31 16:15:01             19975        1.65        1.47        1.80
+2016-10-31 16:16:01             20279        1.64        1.56        1.75
