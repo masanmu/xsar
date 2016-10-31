@@ -1,6 +1,7 @@
 package funcs
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -45,4 +46,14 @@ func FormatPrint(metrics []string) {
 		fmt.Printf("%s\t", metric)
 	}
 	fmt.Printf("\n")
+}
+
+func LivePrint(name string) (interface{}, error) {
+	for _, v := range Mappers {
+		if name == v.Name {
+			return v.Fs(), nil
+		}
+	}
+
+	return "", errors.New("Not module")
 }

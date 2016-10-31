@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/xsar/config"
-	"os"
 	"sort"
 	"strconv"
 	"time"
@@ -42,11 +41,11 @@ func FormatTime(unixTime, index, watch int64) error {
 		return errors.New("Over time")
 	}
 	if index == 0 {
-		fmt.Printf("%-25s", "Time")
+		fmt.Printf("%-18s", "Time")
 		return nil
 	} else {
 		tm := time.Unix(unixTime, 0)
-		fmt.Printf("%-25s", tm.Format("2006-01-02 15:04:05"))
+		fmt.Printf("%-18s", tm.Format("2006-01-02 15:04:05"))
 		return nil
 	}
 }
@@ -72,17 +71,17 @@ func SortMap(dict map[string]interface{}) []string {
 	return head
 }
 
-func ConvInterface(line interface{}) map[string]interface{} {
+func ConvInterface(line interface{}) (map[string]interface{}, error) {
 	content, _ := json.Marshal(line)
 	err := json.Unmarshal(content, &line)
 	if err != nil {
-		os.Exit(-1)
+		return nil, errors.New("Unmarshal json failed")
 	}
 
 	sortLine, ok := line.(map[string]interface{})
 	if !ok {
-		os.Exit(-1)
+		return nil, errors.New("Conv Interface to map error")
 	}
 
-	return sortLine
+	return sortLine, nil
 }

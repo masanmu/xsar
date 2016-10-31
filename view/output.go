@@ -6,11 +6,45 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/xsar/config"
+	"github.com/xsar/funcs"
 	"github.com/xsar/module"
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 )
+
+func LiveOutput(name string, watch, interval int64) {
+	var index int64
+	err := FormatTime(time.Now().Unix(), index, watch)
+	if err != nil {
+		os.Exit(-1)
+	}
+	for {
+		line, err := funcs.LivePrint(name)
+		if err != nil {
+			log.Fatalf("Not Load Module %s", name)
+		}
+		sortLine, err := ConvInterface(line)
+		if err != nil {
+			log.Fatalf("Convert interface to map failed")
+		}
+		if index == 0 {
+			SortHead(sortLine)
+		} else {
+			err = FormatTime(time.Now().Unix(), index, watch)
+			values := SortMap(sortLine)
+			for _, key := range values {
+				value := FormatUnit(sortLine[key])
+				fmt.Printf("%12s", value)
+			}
+
+		}
+		fmt.Println()
+		index++
+		time.Sleep(time.Duration(interval) * time.Second)
+	}
+}
 
 func Output(name string, watch int64) {
 	var metrics module.Metrics
@@ -55,7 +89,11 @@ func Output(name string, watch int64) {
 }
 
 func defaultOutput(line interface{}, now, index int64) {
-	sortLine := ConvInterface(line)
+	sortLine, err := ConvInterface(line)
+	if err != nil {
+		log.Fatalf("Convert interface to map failed")
+	}
+
 	if index == 0 {
 		SortHead(sortLine)
 	} else {
@@ -74,13 +112,21 @@ func multiOutput(line interface{}, now, index, watch int64) {
 		metrics := line.([]module.DfMetric)
 		if index == 0 {
 			for _, value := range metrics {
-				sortLine := ConvInterface(value)
+				sortLine, err := ConvInterface(value)
+				if err != nil {
+					log.Fatalf("Convert interface to map failed")
+				}
+
 				SortHead(sortLine)
 				break
 			}
 		} else {
 			for _, value := range metrics {
-				sortLine := ConvInterface(value)
+				sortLine, err := ConvInterface(value)
+				if err != nil {
+					log.Fatalf("Convert interface to map failed")
+				}
+
 				values := SortMap(sortLine)
 				for _, key := range values {
 					value := FormatUnit(sortLine[key])
@@ -97,13 +143,21 @@ func multiOutput(line interface{}, now, index, watch int64) {
 		metrics := line.([]module.IoMetric)
 		if index == 0 {
 			for _, value := range metrics {
-				sortLine := ConvInterface(value)
+				sortLine, err := ConvInterface(value)
+				if err != nil {
+					log.Fatalf("Convert interface to map failed")
+				}
+
 				SortHead(sortLine)
 				break
 			}
 		} else {
 			for _, value := range metrics {
-				sortLine := ConvInterface(value)
+				sortLine, err := ConvInterface(value)
+				if err != nil {
+					log.Fatalf("Convert interface to map failed")
+				}
+
 				values := SortMap(sortLine)
 				for _, key := range values {
 					value := FormatUnit(sortLine[key])
