@@ -19,7 +19,6 @@ func loadMetrics() module.LoadMetric {
 	load.Load1min, _ = strconv.ParseFloat(info[0], 64)
 	load.Load5min, _ = strconv.ParseFloat(info[1], 64)
 	load.Load15min, _ = strconv.ParseFloat(info[2], 64)
-	load.Lastaskpid, _ = strconv.ParseFloat(info[4], 64)
-
+	load.Lastaskpid = info[4]
 	return load
 }

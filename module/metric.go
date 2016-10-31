@@ -39,7 +39,7 @@ type DfMetric struct {
 }
 
 type IoMetric struct {
-	Disk    string  `json:"disk"`
+	Disk    string  `json:"zdisk"`
 	Rrqms   float64 `json:"rrqms"`
 	Wrqms   float64 `json:"wrqms"`
 	Rs      float64 `json:"rs"`
@@ -57,7 +57,7 @@ type LoadMetric struct {
 	Load1min   float64 `json:"load1min"`
 	Load5min   float64 `json:"load5min"`
 	Load15min  float64 `json:"load15min"`
-	Lastaskpid float64 `json:"lastaskpid"`
+	Lastaskpid string  `json:"lastaskpid"`
 }
 
 type MemMetric struct {
@@ -72,9 +72,9 @@ type MemMetric struct {
 }
 
 type TcpMetric struct {
-	ActiveOpens  float64 `json:"activeopens"`
-	PassiveOpens float64 `json:"passiveopens"`
-	AttemptFails float64 `json:"attemptfails"`
+	ActiveOpens  float64 `json:"active"`
+	PassiveOpens float64 `json:"passive"`
+	AttemptFails float64 `json:"attemptfail"`
 	EstabResets  float64 `json:"estabresets"`
 	CurrEstab    float64 `json:"currestab"`
 	InSegs       float64 `json:"insegs"`
@@ -93,8 +93,8 @@ type TrafficMetric struct {
 }
 
 type UdpMetric struct {
-	InDatagrams  float64 `json:"indatagrams"`
+	InDatagrams  float64 `json:"indatagm"`
 	NoPorts      float64 `json:"noports"`
 	InErrors     float64 `json:"inerrors"`
-	OutDatagrams float64 `json:"outdatagrams"`
+	OutDatagrams float64 `json:"outdatagm"`
 }

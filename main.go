@@ -12,7 +12,8 @@ import (
 )
 
 func main() {
-	var dohelp, cron, listModule bool
+	var dohelp, cron bool
+	var watch int64
 	fs := flag.NewFlagSet("xsar", flag.ExitOnError)
 	fs.Usage = func() {
 		fmt.Println(Help())
@@ -20,8 +21,8 @@ func main() {
 	}
 
 	fs.BoolVar(&dohelp, "help", false, "")
-	fs.BoolVar(&cron, "cron", false, "")
-	fs.BoolVar(&listModule, "list", false, "")
+	fs.BoolVar(&cron, "c", false, "")
+	fs.Int64Var(&watch, "w", 1440, "")
 
 	funcs.BuildMappers()
 	module.AddCmdFlags(fs)
@@ -30,14 +31,11 @@ func main() {
 	switch {
 	case dohelp:
 		fs.Usage()
-	case listModule:
-		var modules xsar.Module
-		modules.ListModule()
 	case cron:
 		xsar.Colloct()
 	default:
 		fs.Visit(func(fn *flag.Flag) {
-			view.View(fn.Name)
+			view.View(fn.Name, watch)
 		})
 	}
 }
@@ -46,9 +44,8 @@ func Help() string {
 	helpText := `
 Usage: xsar [options]
 Options:
-    -cron      run in cron mode, output data to file
-    -interval  specify intervals numbers, in minutes if with --live, it is in seconds
-    -list      list enabled modules
+    -c      run in cron mode, output data to file
+    -w     display last records in N mimutes.
 `
 	helpText += module.Help()
 	return strings.TrimSpace(helpText)

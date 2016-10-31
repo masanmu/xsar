@@ -10,13 +10,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"sort"
-	"time"
 )
 
-func Output(name string) {
+func Output(name string, watch int64) {
 	var metrics module.Metrics
 	var bs []byte
+	var index int64
 	bs, err := ioutil.ReadFile(config.XsarFile)
 	if err != nil {
 		log.Fatalf("Failed to open %s file", config.XsarFile)
@@ -28,55 +27,93 @@ func Output(name string) {
 			os.Exit(0)
 		}
 		json.Unmarshal(line, &metrics)
+		err = FormatTime(metrics.Now, index, watch)
+		if err != nil {
+			continue
+		}
 		switch name {
 		case "cpu":
-			defaultOutput(metrics.Cpu, metrics.Now)
+			defaultOutput(metrics.Cpu, metrics.Now, index)
 		case "load":
-			defaultOutput(metrics.Load, metrics.Now)
+			defaultOutput(metrics.Load, metrics.Now, index)
 		case "mem":
-			defaultOutput(metrics.Mem, metrics.Now)
+			defaultOutput(metrics.Mem, metrics.Now, index)
 		case "tcp":
-			defaultOutput(metrics.Tcp, metrics.Now)
+			defaultOutput(metrics.Tcp, metrics.Now, index)
 		case "udp":
-			defaultOutput(metrics.Udp, metrics.Now)
+			defaultOutput(metrics.Udp, metrics.Now, index)
 		case "traffic":
-			defaultOutput(metrics.Traffic, metrics.Now)
+			defaultOutput(metrics.Traffic, metrics.Now, index)
 		case "df":
-			for _, df := range metrics.Df {
-				defaultOutput(df, metrics.Now)
-			}
+			multiOutput(metrics.Df, metrics.Now, index, watch)
 		case "io":
-			for _, io := range metrics.Io {
-				defaultOutput(io, metrics.Now)
-			}
+			multiOutput(metrics.Io, metrics.Now, index, watch)
+		}
+		index++
+		fmt.Println()
+	}
+}
+
+func defaultOutput(line interface{}, now, index int64) {
+	sortLine := ConvInterface(line)
+	if index == 0 {
+		SortHead(sortLine)
+	} else {
+		values := SortMap(sortLine)
+		for _, key := range values {
+			value := FormatUnit(sortLine[key])
+			fmt.Printf("%12s", value)
 		}
 	}
 }
 
-func sortMap(dict map[string]interface{}) []string {
-	var head []string
-	for key, _ := range dict {
-		head = append(head, key)
-	}
-	sort.Strings(head)
-	return head
-}
-
-func defaultOutput(line interface{}, now int64) {
-	content, _ := json.Marshal(line)
-	err := json.Unmarshal(content, &line)
-	if err != nil {
-		os.Exit(-1)
-	}
-
-	tm := time.Unix(now, 0)
-
-	fmt.Printf("%-25s", tm.Format("2006-01-02 15:04:05"))
-	sortLine := line.(map[string]interface{})
-	head := sortMap(sortLine)
-	for _, key := range head {
-		value := Format(sortLine[key])
-		fmt.Printf("%-10s", value)
-	}
+func multiOutput(line interface{}, now, index, watch int64) {
 	fmt.Println()
+	switch line.(type) {
+	case []module.DfMetric:
+		metrics := line.([]module.DfMetric)
+		if index == 0 {
+			for _, value := range metrics {
+				sortLine := ConvInterface(value)
+				SortHead(sortLine)
+				break
+			}
+		} else {
+			for _, value := range metrics {
+				sortLine := ConvInterface(value)
+				values := SortMap(sortLine)
+				for _, key := range values {
+					value := FormatUnit(sortLine[key])
+					fmt.Printf("%10s", value)
+				}
+				fmt.Println()
+			}
+			for i := 0; i < 81; i++ {
+				fmt.Printf("%s", "-")
+			}
+		}
+
+	case []module.IoMetric:
+		metrics := line.([]module.IoMetric)
+		if index == 0 {
+			for _, value := range metrics {
+				sortLine := ConvInterface(value)
+				SortHead(sortLine)
+				break
+			}
+		} else {
+			for _, value := range metrics {
+				sortLine := ConvInterface(value)
+				values := SortMap(sortLine)
+				for _, key := range values {
+					value := FormatUnit(sortLine[key])
+					fmt.Printf("%10s", value)
+				}
+				fmt.Println()
+			}
+			for i := 0; i < 106; i++ {
+				fmt.Printf("%s", "-")
+			}
+		}
+	}
 }
