@@ -10,10 +10,11 @@ import (
 	"strings"
 )
 
-var df []module.DfMetric
 var now module.DfMetric
+var df []module.DfMetric
 
 func DfMetrics() interface{} {
+	df = nil
 	return dfMetrics()
 }
 

@@ -28,6 +28,7 @@ var ioNow, ioPre []metric
 var io []module.IoMetric
 
 func IoMetrics() interface{} {
+	io = nil
 	ioPre = ioMetrics()
 	time.Sleep(time.Second)
 	ioNow = ioMetrics()

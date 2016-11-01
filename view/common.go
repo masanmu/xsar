@@ -41,11 +41,11 @@ func FormatTime(unixTime, index, watch int64) error {
 		return errors.New("Over time")
 	}
 	if index == 0 {
-		fmt.Printf("%-18s", "Time")
+		fmt.Printf(config.FormatTimeString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, "Time", config.ColorTag)
 		return nil
 	} else {
 		tm := time.Unix(unixTime, 0)
-		fmt.Printf("%-18s", tm.Format("2006-01-02 15:04:05"))
+		fmt.Printf(config.FormatTimeString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, tm.Format("2006-01-02 15:04:05"), config.ColorTag)
 		return nil
 	}
 }
@@ -58,7 +58,7 @@ func SortHead(dict map[string]interface{}) {
 	sort.Strings(head)
 
 	for _, key := range head {
-		fmt.Printf("%12s", key)
+		fmt.Printf(config.FormatHeadString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, key, config.ColorTag)
 	}
 }
 
