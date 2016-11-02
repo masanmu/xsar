@@ -26,7 +26,7 @@ const (
 
 const (
 	MaxList           = 10
-	FormatTimeString  = "%c[%d;%d;%dm%20s%c[0m"
+	FormatTimeString  = "%c[%d;%d;%dm%-20s%c[0m"
 	FormatHeadString  = "%c[%d;%d;%dm%14s%c[0m"
 	FormatValueString = "%c[0;40;37m%14s%c[0m"
 	ColorTag          = 0x1B

@@ -16,10 +16,6 @@ import (
 
 func LiveOutput(name string, watch, interval int64) {
 	var index int64
-	err := FormatTime(time.Now().Unix(), index, watch)
-	if err != nil {
-		os.Exit(-1)
-	}
 	for {
 		line, err := funcs.LivePrint(name)
 		if err != nil {
@@ -54,23 +50,19 @@ func Output(name string, watch int64) {
 			os.Exit(0)
 		}
 		json.Unmarshal(line, &metrics)
-		err = FormatTime(metrics.Now, index%config.MaxList, watch)
-		if err != nil {
-			continue
-		}
 		switch name {
 		case "cpu":
-			SingleOutput(metrics.Cpu, metrics.Now, index)
+			SingleOutput(metrics.Cpu, metrics.Now, index, watch)
 		case "load":
-			SingleOutput(metrics.Load, metrics.Now, index)
+			SingleOutput(metrics.Load, metrics.Now, index, watch)
 		case "mem":
-			SingleOutput(metrics.Mem, metrics.Now, index)
+			SingleOutput(metrics.Mem, metrics.Now, index, watch)
 		case "tcp":
-			SingleOutput(metrics.Tcp, metrics.Now, index)
+			SingleOutput(metrics.Tcp, metrics.Now, index, watch)
 		case "udp":
-			SingleOutput(metrics.Udp, metrics.Now, index)
+			SingleOutput(metrics.Udp, metrics.Now, index, watch)
 		case "traffic":
-			SingleOutput(metrics.Traffic, metrics.Now, index)
+			SingleOutput(metrics.Traffic, metrics.Now, index, watch)
 		case "df":
 			MultiOutput(metrics.Df, metrics.Now, index, watch)
 		case "io":

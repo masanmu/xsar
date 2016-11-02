@@ -1,86 +1,37 @@
 package view
 
 import (
+	"errors"
 	"fmt"
 	"github.com/xsar/config"
-	"github.com/xsar/module"
-	"log"
 )
 
-func SingleOutput(line interface{}, now, index int64) {
+func SingleOutput(line interface{}, now, index, watch int64) error {
 	sortLine, err := ConvInterface(line)
 	if err != nil {
-		log.Fatalf("Convert interface to map failed")
+		return errors.New("Convert interface to map failed")
+	}
+
+	err = FormatTime(now, index%config.MaxList, watch)
+	if err != nil {
+		return errors.New("Over time")
 	}
 
 	if index%config.MaxList == 0 {
 		SortHead(sortLine)
-	} else {
-		values := SortMap(sortLine)
-		for _, key := range values {
-			value := FormatUnit(sortLine[key])
-			fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
-		}
+		fmt.Println()
+		index++
+		err = FormatTime(now, index%config.MaxList, watch)
 	}
+	values := SortMap(sortLine)
+	for _, key := range values {
+		value := FormatUnit(sortLine[key])
+		fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
+	}
+	return nil
 }
 
-func MultiOutput(line interface{}, now, index, watch int64) {
-	fmt.Println()
-	switch line.(type) {
-	case []module.DfMetric:
-		metrics := line.([]module.DfMetric)
-		if index%config.MaxList == 0 {
-			for _, value := range metrics {
-				sortLine, err := ConvInterface(value)
-				if err != nil {
-					log.Fatalf("Convert interface to map failed")
-				}
-
-				SortHead(sortLine)
-				break
-			}
-		} else {
-			for _, value := range metrics {
-				sortLine, err := ConvInterface(value)
-				if err != nil {
-					log.Fatalf("Convert interface to map failed")
-				}
-
-				values := SortMap(sortLine)
-				for _, key := range values {
-					value := FormatUnit(sortLine[key])
-					fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
-				}
-				fmt.Println()
-			}
-		}
-
-	case []module.IoMetric:
-		metrics := line.([]module.IoMetric)
-		if index%config.MaxList == 0 {
-			for _, value := range metrics {
-				sortLine, err := ConvInterface(value)
-				if err != nil {
-					log.Fatalf("Convert interface to map failed")
-				}
-
-				SortHead(sortLine)
-				break
-			}
-		} else {
-			for _, value := range metrics {
-				sortLine, err := ConvInterface(value)
-				if err != nil {
-					log.Fatalf("Convert interface to map failed")
-				}
-
-				values := SortMap(sortLine)
-				for _, key := range values {
-					value := FormatUnit(sortLine[key])
-					fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
-				}
-				fmt.Println()
-			}
-		}
-	}
+func MultiOutput(line interface{}, now, index, watch int64) error {
+	err := Multi(line, index, watch, now)
+	return err
 }
