@@ -85,3 +85,9 @@ func ConvInterface(line interface{}) (map[string]interface{}, error) {
 
 	return sortLine, nil
 }
+
+type AggMetric struct {
+	Max float64
+	Avg float64
+	Min float64
+}

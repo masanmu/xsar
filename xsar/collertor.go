@@ -2,6 +2,7 @@ package xsar
 
 import (
 	"encoding/json"
+	"github.com/xsar/config"
 	"github.com/xsar/funcs"
 	"log"
 	"os"
@@ -31,8 +32,7 @@ func colloct(name string, item interface{}) {
 }
 
 func writeFile(content string) {
-	xsarlog := "/var/log/xsar.data"
-	f, err := os.OpenFile(xsarlog, os.O_WRONLY|os.O_APPEND, 0666)
+	f, err := os.OpenFile(config.XsarFile, os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		os.Exit(-1)
 	}

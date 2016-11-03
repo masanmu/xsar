@@ -10,6 +10,7 @@ const (
 	TrafficFile = "/proc/net/dev"
 	MntFile     = "/etc/mtab"
 	XsarFile    = "/var/log/xsar.data"
+	CronFile    = "/etc/cron.d/xsar"
 )
 
 const (
