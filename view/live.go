@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func LiveSingleOutput(line interface{}, index, watch int64) error {
+func LiveSingleOutput(line interface{}, watch int64) error {
 	sortLine, err := ConvInterface(line)
 	if err != nil {
 		return errors.New("Convert interface to map failed")
@@ -16,9 +16,8 @@ func LiveSingleOutput(line interface{}, index, watch int64) error {
 		err = FormatTime(time.Now().Unix(), index%config.MaxList, watch)
 		SortHead(sortLine)
 		fmt.Println()
-		index++
 	}
-	err = FormatTime(time.Now().Unix(), index, watch)
+	err = FormatTime(time.Now().Unix(), index+1, watch)
 	if err != nil {
 		return errors.New("Over time")
 	}
@@ -30,8 +29,8 @@ func LiveSingleOutput(line interface{}, index, watch int64) error {
 	return nil
 }
 
-func LiveMultiOutput(line interface{}, index, watch int64) error {
+func LiveMultiOutput(line interface{}, watch int64) error {
 	var now int64 = time.Now().Unix()
-	err := Multi(line, index, watch, now)
+	err := Multi(line, watch, now)
 	return err
 }

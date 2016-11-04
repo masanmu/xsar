@@ -86,8 +86,13 @@ func ConvInterface(line interface{}) (map[string]interface{}, error) {
 	return sortLine, nil
 }
 
-type AggMetric struct {
-	Max float64
-	Avg float64
-	Min float64
+func ConvInterfaceToFloat(value interface{}) (float64, error) {
+	switch value.(type) {
+	case float64:
+		return value.(float64), nil
+	case string:
+		return 0.0, errors.New("string")
+	default:
+		return 0.0, errors.New("default")
+	}
 }

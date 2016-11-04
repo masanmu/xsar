@@ -15,7 +15,6 @@ import (
 )
 
 func LiveOutput(name string, watch, interval int64) {
-	var index int64
 	for {
 		line, err := funcs.LivePrint(name)
 		if err != nil {
@@ -23,11 +22,11 @@ func LiveOutput(name string, watch, interval int64) {
 		}
 		switch line.(type) {
 		case []module.IoMetric:
-			LiveMultiOutput(line, index, watch)
+			LiveMultiOutput(line, watch)
 		case []module.DfMetric:
-			LiveMultiOutput(line, index, watch)
+			LiveMultiOutput(line, watch)
 		default:
-			LiveSingleOutput(line, index, watch)
+			LiveSingleOutput(line, watch)
 		}
 		fmt.Println()
 		index++
@@ -38,7 +37,6 @@ func LiveOutput(name string, watch, interval int64) {
 func Output(name string, watch int64) {
 	var metrics module.Metrics
 	var bs []byte
-	var index int64
 	bs, err := ioutil.ReadFile(config.XsarFile)
 	if err != nil {
 		log.Fatalf("Failed to open %s file", config.XsarFile)
@@ -47,28 +45,32 @@ func Output(name string, watch int64) {
 	for {
 		line, err := reader.ReadSlice('\n')
 		if err != nil {
+			fmt.Println()
+			printAvgAgg()
+			printMaxAgg()
+			printMinAgg()
 			os.Exit(0)
 		}
 		json.Unmarshal(line, &metrics)
 		switch name {
 		case "cpu":
-			SingleOutput(metrics.Cpu, metrics.Now, index, watch)
+			SingleOutput(metrics.Cpu, metrics.Now, watch)
 		case "load":
-			SingleOutput(metrics.Load, metrics.Now, index, watch)
+			SingleOutput(metrics.Load, metrics.Now, watch)
 		case "mem":
-			SingleOutput(metrics.Mem, metrics.Now, index, watch)
+			SingleOutput(metrics.Mem, metrics.Now, watch)
 		case "tcp":
-			SingleOutput(metrics.Tcp, metrics.Now, index, watch)
+			SingleOutput(metrics.Tcp, metrics.Now, watch)
 		case "udp":
-			SingleOutput(metrics.Udp, metrics.Now, index, watch)
+			SingleOutput(metrics.Udp, metrics.Now, watch)
 		case "traffic":
-			SingleOutput(metrics.Traffic, metrics.Now, index, watch)
+			SingleOutput(metrics.Traffic, metrics.Now, watch)
 		case "df":
-			MultiOutput(metrics.Df, metrics.Now, index, watch)
+			MultiOutput(metrics.Df, metrics.Now, watch)
 		case "io":
-			MultiOutput(metrics.Io, metrics.Now, index, watch)
+			MultiOutput(metrics.Io, metrics.Now, watch)
 		}
 		index++
-		fmt.Println()
 	}
+
 }

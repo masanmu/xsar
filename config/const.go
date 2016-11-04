@@ -26,12 +26,13 @@ const (
 )
 
 const (
-	MaxList           = 10
-	FormatTimeString  = "%c[%d;%d;%dm%-20s%c[0m"
-	FormatHeadString  = "%c[%d;%d;%dm%14s%c[0m"
-	FormatValueString = "%c[0;40;37m%14s%c[0m"
-	ColorTag          = 0x1B
-	BackGround        = 44 //40-47
-	Prospect          = 30 //30-37
-	Flag              = 7  //0-终端默认设置,1-高亮显示,4-使用下划线,5-闪烁,7-反白显示,8-不可见
+	MaxList               = 10
+	FormatTimeString      = "%c[%d;%d;%dm%-20s%c[0m"
+	FormatHeadString      = "%c[%d;%d;%dm%14s%c[0m"
+	FormatValueString     = "%c[0;40;37m%14s%c[0m"
+	FormatValueHeadString = "|------------------"
+	ColorTag              = 0x1B
+	BackGround            = 44 //40-47
+	Prospect              = 30 //30-37
+	Flag                  = 7  //0-终端默认设置,1-高亮显示,4-使用下划线,5-闪烁,7-反白显示,8-不可见
 )
