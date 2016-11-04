@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/xsar/config"
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/xsar/config"
 )
 
 func FormatUnit(value interface{}) string {
@@ -86,13 +87,13 @@ func ConvInterface(line interface{}) (map[string]interface{}, error) {
 	return sortLine, nil
 }
 
-func ConvInterfaceToFloat(value interface{}) (float64, error) {
+func ConvInterfaceToFloat(value interface{}) error {
 	switch value.(type) {
 	case float64:
-		return value.(float64), nil
+		return nil
 	case string:
-		return 0.0, errors.New("string")
+		return errors.New("string")
 	default:
-		return 0.0, errors.New("default")
+		return errors.New("default")
 	}
 }

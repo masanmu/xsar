@@ -2,12 +2,13 @@ package view
 
 import (
 	"fmt"
+
 	"github.com/xsar/config"
 )
 
-var maxMetric = map[string]float64{}
-var minMetric = map[string]float64{}
-var avgMetric = map[string]float64{}
+var maxMetric = map[string]interface{}{}
+var minMetric = map[string]interface{}{}
+var avgMetric = map[string]interface{}{}
 var head []string
 
 func agg(sortHead []string, line map[string]interface{}) {
@@ -20,45 +21,58 @@ func agg(sortHead []string, line map[string]interface{}) {
 }
 
 func maxAgg(key string, value interface{}) {
-	maxValue, err := ConvInterfaceToFloat(value)
+	if index == 0 {
+		maxMetric[key] = value
+	}
+	err := ConvInterfaceToFloat(value)
 	if err != nil {
-		maxMetric[key] = maxValue
+		maxMetric[key] = value
 		return
 	}
-	if maxValue > maxMetric[key] {
-		maxMetric[key] = maxValue
+	if value.(float64) > (maxMetric[key]).(float64) {
+		maxMetric[key] = value
 	}
 }
 
 func minAgg(key string, value interface{}) {
-	minValue, err := ConvInterfaceToFloat(value)
 	if index == 0 {
-		minMetric[key] = minValue
+		minMetric[key] = value
 		return
 	}
+	err := ConvInterfaceToFloat(value)
 	if err != nil {
-		minMetric[key] = minValue
+		minMetric[key] = value
 		return
 	}
-	if minValue < minMetric[key] {
-		minMetric[key] = minValue
+	if value.(float64) < minMetric[key].(float64) {
+		minMetric[key] = value
 	}
 }
 
 func avgAgg(key string, value interface{}) {
-	avgValue, err := ConvInterfaceToFloat(value)
-	if err != nil {
-		avgMetric[key] = avgValue
+	if index == 0 {
+		avgMetric[key] = value
 		return
 	}
-	avgMetric[key] += avgValue
+	err := ConvInterfaceToFloat(value)
+	if err != nil {
+		avgMetric[key] = value
+		return
+	}
+	avgMetric[key] = avgMetric[key].(float64) + value.(float64)
 }
 
 func printAvgAgg() {
 	fmt.Printf(config.FormatTimeString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, "AVG", config.ColorTag)
 	for _, key := range head {
-		value := FormatUnit(avgMetric[key] / float64(index))
-		fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
+		switch avgMetric[key].(type) {
+		case string:
+			value := FormatUnit(avgMetric[key])
+			fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
+		case float64:
+			value := FormatUnit(avgMetric[key].(float64) / float64(index))
+			fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
+		}
 	}
 	fmt.Println()
 }
