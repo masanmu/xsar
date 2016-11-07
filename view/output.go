@@ -72,5 +72,4 @@ func Output(name string, watch int64) {
 		}
 		index++
 	}
-
 }

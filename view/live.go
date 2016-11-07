@@ -8,14 +8,13 @@ import (
 )
 
 func LiveSingleOutput(line interface{}, watch int64) error {
-	sortLine, err := ConvInterface(line)
+	sortLine, err := ConvInterfaceToMap(line)
 	if err != nil {
 		return errors.New("Convert interface to map failed")
 	}
 	if index%config.MaxList == 0 {
 		err = FormatTime(time.Now().Unix(), index%config.MaxList, watch)
-		SortHead(sortLine)
-		fmt.Println()
+		PrintHead(sortLine)
 	}
 	err = FormatTime(time.Now().Unix(), index+1, watch)
 	if err != nil {

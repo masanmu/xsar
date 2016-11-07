@@ -8,19 +8,18 @@ import (
 )
 
 func MultiHead(value interface{}, now int64) error {
-	sortLine, err := ConvInterface(value)
+	sortLine, err := ConvInterfaceToMap(value)
 	if err != nil {
 		return errors.New("Convert interface to map failed")
 	}
 
-	SortHead(sortLine)
-	fmt.Println()
+	PrintHead(sortLine)
 	err = FormatTime(now, (index+1)%config.MaxList, 1440)
 	return nil
 }
 
 func MultiValue(value interface{}, now int64) error {
-	sortLine, err := ConvInterface(value)
+	sortLine, err := ConvInterfaceToMap(value)
 	if err != nil {
 		return errors.New("Convert interface to map failed")
 	}

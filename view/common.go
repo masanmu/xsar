@@ -51,16 +51,12 @@ func FormatTime(unixTime, index, watch int64) error {
 	}
 }
 
-func SortHead(dict map[string]interface{}) {
-	var head []string
-	for key, _ := range dict {
-		head = append(head, key)
-	}
-	sort.Strings(head)
-
+func PrintHead(dict map[string]interface{}) {
+	head := SortMap(dict)
 	for _, key := range head {
 		fmt.Printf(config.FormatHeadString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, key, config.ColorTag)
 	}
+	fmt.Println()
 }
 
 func SortMap(dict map[string]interface{}) []string {
@@ -72,7 +68,7 @@ func SortMap(dict map[string]interface{}) []string {
 	return head
 }
 
-func ConvInterface(line interface{}) (map[string]interface{}, error) {
+func ConvInterfaceToMap(line interface{}) (map[string]interface{}, error) {
 	content, _ := json.Marshal(line)
 	err := json.Unmarshal(content, &line)
 	if err != nil {
