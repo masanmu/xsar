@@ -97,3 +97,19 @@ func ConvInterfaceToFloat(value interface{}) error {
 		return errors.New("default")
 	}
 }
+
+func initVariables(len int) {
+	maxMetric = make([]map[string]interface{}, len)
+	minMetric = make([]map[string]interface{}, len)
+	avgMetric = make([]map[string]interface{}, len)
+
+	for i, _ := range maxMetric {
+		maxMetric[i] = map[string]interface{}{}
+	}
+	for i, _ := range minMetric {
+		minMetric[i] = map[string]interface{}{}
+	}
+	for i, _ := range avgMetric {
+		avgMetric[i] = map[string]interface{}{}
+	}
+}

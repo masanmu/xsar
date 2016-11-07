@@ -46,9 +46,9 @@ func Output(name string, watch int64) {
 		line, err := reader.ReadSlice('\n')
 		if err != nil {
 			fmt.Println()
-			printAvgAgg()
-			printMaxAgg()
-			printMinAgg()
+			printAgg("AVG", avgMetric)
+			printAgg("MAX", maxMetric)
+			printAgg("MIN", minMetric)
 			os.Exit(0)
 		}
 		json.Unmarshal(line, &metrics)

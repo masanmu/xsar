@@ -30,6 +30,11 @@ func main() {
 
 	funcs.BuildMappers()
 	module.AddCmdFlags(fs)
+
+	if (len(os.Args[1:])) <= 0 {
+		fs.Usage()
+	}
+
 	fs.Parse(os.Args[1:])
 
 	if len(live) > 0 {

@@ -24,10 +24,10 @@ func MultiValue(value interface{}, now int64) error {
 	if err != nil {
 		return errors.New("Convert interface to map failed")
 	}
-
-	values := SortMap(sortLine)
+	multiValues = append(multiValues, sortLine)
+	sortHead = SortMap(sortLine)
 	fmt.Printf(config.FormatTimeString, config.ColorTag, config.Flag, config.BackGround, config.Prospect, config.FormatValueHeadString, config.ColorTag)
-	for _, key := range values {
+	for _, key := range sortHead {
 		value := FormatUnit(sortLine[key])
 		fmt.Printf(config.FormatValueString, config.ColorTag, value, config.ColorTag)
 	}
@@ -38,8 +38,10 @@ func MultiValue(value interface{}, now int64) error {
 func Multi(line interface{}, watch, now int64) error {
 	err := FormatTime(now, index%config.MaxList, watch)
 	if err != nil {
+		index--
 		return errors.New("Over time")
 	}
+	multiValues = nil
 	switch line.(type) {
 	case []module.DfMetric:
 		metrics := line.([]module.DfMetric)
@@ -67,5 +69,6 @@ func Multi(line interface{}, watch, now int64) error {
 			MultiValue(value, now)
 		}
 	}
+	multiAgg(sortHead, multiValues)
 	return nil
 }

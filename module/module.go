@@ -31,14 +31,14 @@ func AddCmdFlags(fs *flag.FlagSet) {
 func Help() string {
 	helpText := `
 Modules Enabled:
-    --cpu               CPU share (user, system, interrupt, nice, & idle)
-    --mem               Physical memory share (active, inactive, cached, free, wired)
-    --tcp               TCP traffic     (v4)
-    --udp               UDP traffic     (v4)
-    --traffic           Net traffic statistics
-    --io                Linux I/O performance
-    --df         	Disk and partition usage
-    --load              System Run Queue and load average
+    -cpu               CPU share (user, system, interrupt, nice, & idle)
+    -mem               Physical memory share (active, inactive, cached, free, wired)
+    -tcp               TCP traffic     (v4)
+    -udp               UDP traffic     (v4)
+    -traffic           Net traffic statistics
+    -io                Linux I/O performance
+    -df         	Disk and partition usage
+    -load              System Run Queue and load average
 `
 	return helpText
 }
