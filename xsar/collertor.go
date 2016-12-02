@@ -32,7 +32,7 @@ func colloct(name string, item interface{}) {
 }
 
 func writeFile(content string) {
-	f, err := os.OpenFile(config.XsarFile, os.O_WRONLY|os.O_APPEND, 0666)
+	f, err := os.OpenFile(config.XsarFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		os.Exit(-1)
 	}
